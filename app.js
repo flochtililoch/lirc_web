@@ -54,6 +54,7 @@ if (process.env.NODE_ENV == 'test' || process.env.NODE_ENV == 'development') {
 app.get('/', function(req, res) {
     res.send(JST['index'].render({
         remotes: lirc_node.remotes,
+        devices: config.devices,
         macros: config.macros,
         repeaters: config.repeaters
     }));
@@ -115,14 +116,18 @@ app.post('/devices/:device/:command', function(req, res) {
     // access command:
     // config.devices[req.param.device].commands[req.params.command]
 
-    var device = config.devices[req.param.device],
-        command = device.commands[req.param.command];
+    var device = config.devices[req.params.device];
+    var command = device.commands[req.params.command];
 
-    request({
+    var commandReq = {
         method: command.method,
         url: command.url,
         form: command.body
-    });
+    };
+
+    console.log(commandReq);
+
+    request(commandReq);
 
     res.setHeader('Cache-Control', 'no-cache');
     res.send(200);
@@ -168,6 +173,9 @@ app.post('/macros/:macro', function(req, res) {
             if (command[0] == "delay") {
                 setTimeout(nextCommand, command[1]);
             } else {
+                //
+                // TODO: Add support for devices
+                //
                 // By default, wait 100msec before calling next command
                 lirc_node.irsend.send_once(command[0], command[1], function() { setTimeout(nextCommand, 100); });
             }

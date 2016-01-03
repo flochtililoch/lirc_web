@@ -25,7 +25,9 @@
     "request": "~2.53.0"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "dev": "NODE_ENV=development node app.js",
+    "watch": "grunt server"
   },
   "repository": {
     "type": "git",
