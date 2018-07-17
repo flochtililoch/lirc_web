@@ -63,6 +63,8 @@ function _init() {
 
   if (config.socket) {
     lircNode.setSocket(config.socket);
+  } else if (config.remoteLircdAddress) {
+    lircNode.setAddress(config.remoteLircdAddress);
   }
 
   // Refresh the app cache manifest hash
